@@ -7,21 +7,19 @@ import android.os.AsyncTask;
 import android.os.PowerManager;
 import android.widget.Toast;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @author rahul
@@ -40,7 +38,7 @@ public class ReactNativeAutoUpdater {
     }
 
     public enum ReactNativeAutoUpdaterUpdateType {
-        MAJOR, MINOR, PATCH
+        MAJOR, MINOR, PATCH, MINOR_UPDATE, PATCH_UPDATE
     }
 
     private static ReactNativeAutoUpdater ourInstance = new ReactNativeAutoUpdater();
@@ -228,6 +226,18 @@ public class ReactNativeAutoUpdater {
 
                 case PATCH:
                     if (currentVersion.compareTo(updateVersion) < 0) {
+                        shouldDownload = true;
+                    }
+                    break;
+
+                case MINOR_UPDATE:
+                    if (currentVersion.isMinorUpdate(updateVersion)) {
+                        shouldDownload = true;
+                    }
+                    break;
+
+                case PATCH_UPDATE:
+                    if (currentVersion.isPatchUpdate(updateVersion)) {
                         shouldDownload = true;
                     }
                     break;

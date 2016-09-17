@@ -68,6 +68,42 @@ public class Version implements Comparable<Version> {
         }
     }
 
+    public boolean isPatchUpdate(Version that) {
+        if (that == null)
+            return false;
+
+        int minor = compareMinor(that);
+        if (minor == 0) {
+            String[] thisParts = this.get().split("\\.");
+            String[] thatParts = that.get().split("\\.");
+
+            int thisPatch = thisParts.length > 2 ? Integer.parseInt(thisParts[2]) : 0;
+            int thatPatch = thatParts.length > 2 ? Integer.parseInt(thatParts[2]) : 0;
+
+            if(thisPatch < thatPatch)
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isMinorUpdate(Version that) {
+        if (that == null)
+            return false;
+
+        int major = compareMajor(that);
+        if (major == 0) {
+            String[] thisParts = this.get().split("\\.");
+            String[] thatParts = that.get().split("\\.");
+
+            int thisMinor = thisParts.length > 1 ? Integer.parseInt(thisParts[1]) : 0;
+            int thatMinor = thatParts.length > 1 ? Integer.parseInt(thatParts[1]) : 0;
+
+            if(thisMinor < thatMinor)
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that)
