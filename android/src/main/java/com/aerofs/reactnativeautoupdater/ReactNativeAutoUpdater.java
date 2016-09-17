@@ -3,6 +3,7 @@ package com.aerofs.reactnativeautoupdater;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.PowerManager;
 import android.widget.Toast;
@@ -201,11 +202,21 @@ public class ReactNativeAutoUpdater {
         }
     }
 
+    private String getNativeVersion(){
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            return info.versionName;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private boolean shouldDownloadUpdate(String versionStr, String minContainerVersionStr) {
         boolean shouldDownload = false;
 
         SharedPreferences prefs = context.getSharedPreferences(RNAU_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        String currentVersionStr = prefs.getString(RNAU_STORED_VERSION, null);
+        String currentVersionStr = prefs.getString(RNAU_STORED_VERSION, getNativeVersion());
         if (currentVersionStr == null) {
             shouldDownload = true;
         } else {
